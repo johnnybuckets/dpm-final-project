@@ -1,23 +1,27 @@
-package com.dpm.team4.util;
+package com.dpm.team4.detection;
 
-import com.dpm.team4.detection.DetectionEvent;
-import com.dpm.team4.detection.DetectionListener;
-import com.dpm.team4.detection.DetectionType;
+import java.util.ArrayList;
 
-public class Display extends Thread implements DetectionListener {
+import com.dpm.team4.util.NXTConstants;
+
+public class Detection extends Thread {
+	// Objects listening to detection events
+	private ArrayList<DetectionListener> listenerList;
+
 	/**
-	 * Initialize the LCD.
+	 * Manages the sensors by filtering and processing the data.
 	 */
-	public Display() {
+	public Detection() {
 		// Make this a background thread
 		this.setDaemon(true);
 	}
 
 	/**
-	 * Update the display with current information on odometry, sensor readings, and actions.
+	 * Run detection loop.
 	 */
 	@Override
 	public void run() {
+		// TODO Filter and send events to all relevant listeners
 		long updateStart, updateEnd;
 
 		while (true) {
@@ -43,18 +47,15 @@ public class Display extends Thread implements DetectionListener {
 	}
 
 	/**
-	 * Update display with new sensor detection.
+	 * Send event to all relevant listeners
+	 * 
+	 * @param evt the detection event
 	 */
-	@Override
-	public void detectionOccurred(DetectionEvent evt) {
-		// TODO Auto-generated method stub
-	}
-
-	/**
-	 * Detect both types of sensors.
-	 */
-	@Override
-	public DetectionType getDetectionType() {
-		return DetectionType.BOTH;
+	public void dispatchDetectionEvent(DetectionEvent evt) {
+		for (DetectionListener listener : listenerList) {
+			if (listener.getDetectionType() == evt.getType()) {
+				listener.detectionOccurred(evt);
+			}
+		}
 	}
 }
