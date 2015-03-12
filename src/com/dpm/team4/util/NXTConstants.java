@@ -35,7 +35,6 @@ public class NXTConstants {// TODO: set up constants
 	/*
 	 * Thread loop interval
 	 */
-	public static final long TEMP_PERIOD = 0;// TODO remove this later
 	public static final long CONTROLLER_PERIOD = 0;
 	public static final long DISPLAY_PERIOD = 0;
 	public static final long ODOMETER_PERIOD = 0;
@@ -50,7 +49,7 @@ public class NXTConstants {// TODO: set up constants
 	/*
 	 * Navigation Constants
 	 */
-	// TODO
+	public static final double NAVIGATION_ERROR = 0.5;
 
 	/*
 	 * Detection Constants

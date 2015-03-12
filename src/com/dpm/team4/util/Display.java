@@ -29,9 +29,9 @@ public class Display extends Thread implements DetectionListener {
 
 			// ensure that this only runs once every period
 			updateEnd = System.currentTimeMillis();
-			if (updateEnd - updateStart < NXTConstants.TEMP_PERIOD) {
+			if (updateEnd - updateStart < NXTConstants.DISPLAY_PERIOD) {
 				try {
-					Thread.sleep(NXTConstants.TEMP_PERIOD - (updateEnd - updateStart));
+					Thread.sleep(NXTConstants.DISPLAY_PERIOD - (updateEnd - updateStart));
 				} catch (InterruptedException e) {
 					/*
 					 * There is nothing to be done here because it is not expected that this thread will be interrupted
@@ -46,7 +46,7 @@ public class Display extends Thread implements DetectionListener {
 	 * Update display with new sensor detection.
 	 */
 	@Override
-	public void detectionOccurred(DetectionEvent evt) {
+	public void handleDetection(DetectionEvent evt) {
 		// TODO Auto-generated method stub
 	}
 

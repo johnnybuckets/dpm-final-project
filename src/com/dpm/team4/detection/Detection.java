@@ -6,7 +6,7 @@ import com.dpm.team4.util.NXTConstants;
 
 public class Detection extends Thread {
 	// Objects listening to detection events
-	private ArrayList<DetectionListener> listenerList;
+	private ArrayList<DetectionListener> listeners;
 
 	/**
 	 * Manages the sensors by filtering and processing the data.
@@ -33,9 +33,9 @@ public class Detection extends Thread {
 
 			// ensure that this only runs once every period
 			updateEnd = System.currentTimeMillis();
-			if (updateEnd - updateStart < NXTConstants.TEMP_PERIOD) {
+			if (updateEnd - updateStart < NXTConstants.DETECTION_PERIOD) {
 				try {
-					Thread.sleep(NXTConstants.TEMP_PERIOD - (updateEnd - updateStart));
+					Thread.sleep(NXTConstants.DETECTION_PERIOD - (updateEnd - updateStart));
 				} catch (InterruptedException e) {
 					/*
 					 * There is nothing to be done here because it is not expected that this thread will be interrupted
@@ -45,16 +45,26 @@ public class Detection extends Thread {
 			}
 		}
 	}
+	
+	public void addListener(DetectionListener listener) {
+		listeners.add(listener);
+	}
+	
+	public void removeListener(DetectionListener listener){
+		if(listeners.contains(listener)){
+			listeners.remove(listener);
+		}
+	}
 
 	/**
 	 * Send event to all relevant listeners
 	 * 
 	 * @param evt the detection event
 	 */
-	public void dispatchDetectionEvent(DetectionEvent evt) {
-		for (DetectionListener listener : listenerList) {
+	public void fireDetectionEvent(DetectionEvent evt) {
+		for (DetectionListener listener : listeners) {
 			if (listener.getDetectionType() == evt.getType()) {
-				listener.detectionOccurred(evt);
+				listener.handleDetection(evt);
 			}
 		}
 	}

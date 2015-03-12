@@ -10,18 +10,18 @@ import com.dpm.team4.util.NXTMath;
 public class Odometer extends Thread implements DetectionListener {
 	// For mutual exclusion
 	private Object lock;
-	
+
 	// Motors
 	private NXTRegulatedMotor left;
 	private NXTRegulatedMotor right;
-	
+
 	// Horizontal displacement
 	private double x;
 	// Vertical displacement
 	private double y;
 	// Bearing
 	private double theta;
-	
+
 	// Previous tachometer readings
 	private int leftPreviousTacho;
 	private int rightPreviousTacho;
@@ -34,14 +34,14 @@ public class Odometer extends Thread implements DetectionListener {
 		lock = new Object();
 		left = NXTConstants.LEFT_MOTOR;
 		right = NXTConstants.RIGHT_MOTOR;
-		
+
 		// Initialize variables
 		x = 0.0;
 		y = 0.0;
 		theta = 0.0;
 		leftPreviousTacho = 0;
 		rightPreviousTacho = 0;
-		
+
 		// Initialize motor tachometers
 		left.resetTachoCount();
 		right.resetTachoCount();
@@ -74,9 +74,9 @@ public class Odometer extends Thread implements DetectionListener {
 
 			// ensure that this only runs once every period
 			updateEnd = System.currentTimeMillis();
-			if (updateEnd - updateStart < NXTConstants.TEMP_PERIOD) {
+			if (updateEnd - updateStart < NXTConstants.ODOMETER_PERIOD) {
 				try {
-					Thread.sleep(NXTConstants.TEMP_PERIOD - (updateEnd - updateStart));
+					Thread.sleep(NXTConstants.ODOMETER_PERIOD - (updateEnd - updateStart));
 				} catch (InterruptedException e) {
 					/*
 					 * There is nothing to be done here because it is not expected that this thread will be interrupted
@@ -86,7 +86,7 @@ public class Odometer extends Thread implements DetectionListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * Calculate left distance traveled.
 	 */
@@ -136,12 +136,12 @@ public class Odometer extends Thread implements DetectionListener {
 	private double calculateArcLength(double leftDistance, double rightDistance) {
 		return ((leftDistance + rightDistance) / 2.0);
 	}
-	
+
 	/**
 	 * Update odometer according to detection event.
 	 */
 	@Override
-	public void detectionOccurred(DetectionEvent evt) {
+	public void handleDetection(DetectionEvent evt) {
 		// TODO Auto-generated method stub
 	}
 
@@ -151,6 +151,22 @@ public class Odometer extends Thread implements DetectionListener {
 	@Override
 	public DetectionType getDetectionType() {
 		return DetectionType.LS;
+	}
+
+	public void getPosition(double[] position) {
+		synchronized (lock) {
+			position[0] = x;
+			position[1] = y;
+			position[2] = theta;
+		}
+	}
+
+	public void setPosition(double[] position) {
+		synchronized (lock) {
+			x = position[0];
+			y = position[1];
+			theta = position[2];
+		}
 	}
 
 	public void getPosition(double[] position, boolean[] update) {
