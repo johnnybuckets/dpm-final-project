@@ -59,7 +59,7 @@ public class NXTConstants {// TODO: set up constants
 	/*
 	 * Localization Constants
 	 */
-	// TODO
+	//
 
 	/*
 	 * Ballistics constants
