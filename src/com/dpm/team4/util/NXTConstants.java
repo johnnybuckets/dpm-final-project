@@ -59,8 +59,9 @@ public class NXTConstants {// TODO: set up constants
 	/*
 	 * Localization Constants
 	 */
-	// TODO
-
+	public static final int WALLDIST = 30;
+	private int FILTER_CONTROLE = 0, FILTER_OUT = 20;
+	private static final int SLOW = 100;
 	/*
 	 * Ballistics constants
 	 */
